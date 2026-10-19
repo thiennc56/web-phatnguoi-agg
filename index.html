@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Tra cứu thông tin phạt nguội theo biển số và loại phương tiện trong danh sách được cung cấp.">
+  <title>Tra cứu phạt nguội</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Tra cứu phạt nguội, trang chủ">
+        <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 16V9l2-5h10l2 5v7M5 10h14M8 14h1m6 0h1M6 16v3m12-3v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>Tra cứu giao thông</span>
+      </a>
+      <span class="header-note">Thông tin vi phạm phương tiện</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">TRA CỨU THEO BIỂN SỐ</p>
+      <h1 id="page-title">Tra cứu phạt nguội</h1>
+      <p class="intro-text">Nhập biển số xe và chọn loại phương tiện để xem thông tin vi phạm.</p>
+    </section>
+
+    <section class="search-panel" aria-labelledby="form-title">
+      <div class="panel-heading"><span class="step">01</span><h2 id="form-title">Thông tin phương tiện</h2></div>
+      <form id="search-form" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="plate">Biển số xe <span aria-hidden="true">*</span></label>
+            <input id="plate" name="plate" type="text" placeholder="Ví dụ: 68C-162.58" maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" required aria-describedby="plate-help plate-error">
+            <p class="field-help" id="plate-help">Có thể nhập liền: <strong>68C16258</strong></p>
+            <p class="field-error" id="plate-error" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="vehicle">Loại phương tiện</label>
+            <select id="vehicle" name="vehicle"><option value="">Tất cả phương tiện</option></select>
+            <p class="field-help">Chọn “Tất cả” nếu chưa rõ loại xe.</p>
+          </div>
+          <button class="primary-button" type="submit" id="search-button">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Tra cứu
+          </button>
+        </div>
+        <div class="form-bottom"><p>Không phân biệt chữ hoa, chữ thường hoặc dấu chấm, gạch nối.</p><button type="reset" class="text-button">Nhập lại</button></div>
+      </form>
+      <noscript><p class="notice">Vui lòng bật JavaScript trong trình duyệt để sử dụng chức năng tra cứu.</p></noscript>
+      <p id="data-error" class="notice" role="alert" hidden></p>
+    </section>
+
+    <div class="data-summary" aria-label="Phạm vi dữ liệu"><span class="data-label"><span class="data-dot" aria-hidden="true"></span>Dữ liệu trong danh sách cung cấp</span><span id="data-period">Đang đọc dữ liệu…</span></div>
+
+    <section class="results-section" aria-labelledby="results-title">
+      <div class="results-heading"><div class="panel-heading"><span class="step">02</span><h2 id="results-title">Kết quả tra cứu</h2></div><span id="result-count" class="count" hidden></span></div>
+      <p id="search-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div id="empty-state" class="empty-state">
+        <span class="empty-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><rect x="7" y="10" width="30" height="24" rx="5" stroke="currentColor" stroke-width="1.7"/><path d="M14 18h16M14 25h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="34" cy="33" r="7" fill="white" stroke="currentColor" stroke-width="1.7"/><path d="m39 38 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+        <h3 id="empty-title">Sẵn sàng tra cứu</h3>
+        <p id="empty-description">Thông tin vi phạm sẽ hiển thị tại đây sau khi bạn nhập biển số.</p>
+        <button id="example-button" class="example-button" type="button">Thử với biển số 68C-162.58 <span aria-hidden="true">→</span></button>
+      </div>
+      <div id="result-list" class="result-list" hidden></div>
+    </section>
+
+    <aside class="scope-note"><span class="info-icon" aria-hidden="true">i</span><p><strong>Phạm vi tra cứu</strong><br>Kết quả dựa trên danh sách Excel được cung cấp, không tự cập nhật từ hệ thống CSGT. Không tìm thấy kết quả chỉ có nghĩa là không có bản ghi phù hợp trong danh sách này.</p></aside>
+  </main>
+  <footer class="container footer"><span>Tra cứu phạt nguội</span><span id="data-total"></span></footer>
+
+  <template id="violation-template">
+    <article class="violation-card">
+      <div class="card-header"><div><p class="card-kicker">BIỂN SỐ PHƯƠNG TIỆN</p><h3 class="plate-value"></h3></div><span class="record-number"></span></div>
+      <dl class="details-grid"><div><dt>Ngày vi phạm</dt><dd class="date-value"></dd></div><div><dt>Giờ vi phạm</dt><dd class="time-value"></dd></div><div class="vehicle-detail"><dt>Loại phương tiện</dt><dd class="vehicle-value"></dd></div></dl>
+      <div class="violation-detail"><h4>Hành vi vi phạm</h4><p class="violation-value"></p></div>
+      <div class="record-source"></div>
+    </article>
+  </template>
+</body>
+</html>
