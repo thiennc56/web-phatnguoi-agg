@@ -2,6 +2,10 @@
 
 Trang HTML, CSS và JavaScript thuần, giao diện nền trắng, chữ đen, nút xanh dương; tự điều chỉnh trên điện thoại, máy tính bảng và máy tính.
 
+Bản giao diện mới bố trí form và kết quả thành hai cột trên máy tính; chuyển thành một cột dưới 800px và xếp các ô nhập theo chiều dọc dưới 480px. Có khung biển số, biểu tượng ngày/giờ, thẻ hành vi vi phạm nền xanh nhạt và nút tra cứu lớn. Khối “Phạm vi tra cứu” đã được bỏ theo yêu cầu.
+
+Nếu đã đưa bản trước lên GitHub Pages, chỉ cần thay `index.html` và `styles.css`, sau đó commit/push. `app.js` và `data.js` giữ nguyên. Nếu vẫn thấy giao diện cũ sau khi GitHub triển khai xong, tải lại trang hoặc xóa bộ nhớ đệm của trang.
+
 ## Cách chạy
 
 1. Giải nén toàn bộ ZIP.
