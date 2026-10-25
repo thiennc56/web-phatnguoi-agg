@@ -2,7 +2,7 @@
 
 Trang HTML, CSS và JavaScript thuần, giao diện nền trắng, chữ đen, nút xanh dương; tự điều chỉnh trên điện thoại, máy tính bảng và máy tính.
 
-Bản giao diện mới bố trí form và kết quả thành hai cột trên máy tính; chuyển thành một cột dưới 800px và xếp các ô nhập theo chiều dọc dưới 480px. Có khung biển số, biểu tượng ngày/giờ, thẻ hành vi vi phạm nền xanh nhạt và nút tra cứu lớn. Khối “Phạm vi tra cứu” đã được bỏ theo yêu cầu.
+Bản giao diện mới bố trí form và kết quả thành hai cột trên máy tính; chuyển thành một cột dưới 800px và xếp các ô nhập theo chiều dọc dưới 480px. Kết quả tra cứu hiển thị dạng bảng “Danh sách vi phạm”, có thể cuộn ngang trên màn hình nhỏ. Khối “Phạm vi tra cứu” đã được bỏ theo yêu cầu.
 
 Nếu đã đưa bản trước lên GitHub Pages, chỉ cần thay `index.html` và `styles.css`, sau đó commit/push. `app.js` và `data.js` giữ nguyên. Nếu vẫn thấy giao diện cũ sau khi GitHub triển khai xong, tải lại trang hoặc xóa bộ nhớ đệm của trang.
 
@@ -21,7 +21,7 @@ Không cần cài đặt, build, Internet hay máy chủ. Giữ các file `index
 - So khớp chính xác toàn bộ biển số sau khi bỏ khoảng trắng, dấu chấm, gạch nối; không tìm gần đúng để tránh nhầm xe.
 - Chọn tất cả phương tiện, nhóm ô tô/mô tô, hoặc một trong 21 loại xe trong dữ liệu.
 - Trả về tất cả bản ghi trùng biển số và bộ lọc, xếp mới nhất trước.
-- Hiển thị biển số, ngày, giờ, loại phương tiện, hành vi vi phạm và STT trong Excel gốc.
+- Hiển thị danh sách dạng bảng gồm biển số, hành vi, thời gian vi phạm, loại phương tiện và STT trong Excel gốc.
 - Có thông báo khi chưa nhập, nhập sai, không có kết quả hoặc thiếu file dữ liệu.
 - Nút **Nhập lại** xóa điều kiện và kết quả. Thay đổi điều kiện sẽ ẩn kết quả cũ, tránh nhầm với lần tra cứu mới.
 
@@ -37,7 +37,7 @@ Không cần cài đặt, build, Internet hay máy chủ. Giữ các file `index
 
 ## Cấu trúc và cập nhật dữ liệu
 
-- `index.html`: giao diện, form và mẫu thẻ kết quả.
+- `index.html`: giao diện, form và cấu trúc bảng kết quả.
 - `styles.css`: giao diện responsive.
 - `app.js`: chuẩn hóa biển số, bộ lọc, kiểm tra đầu vào, hiển thị kết quả.
 - `data.js`: dữ liệu đã chuyển từ Excel; không cần nạp lại file Excel khi chạy.

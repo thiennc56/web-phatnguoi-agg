@@ -48,6 +48,7 @@
   const input = $('plate');
   const select = $('vehicle');
   const list = $('result-list');
+  const resultRows = $('result-rows');
   const empty = $('empty-state');
   const error = $('plate-error');
   const count = $('result-count');
@@ -70,8 +71,89 @@
 
   const records = dataset.records;
   const meta = dataset.meta;
+  const allRows = $('all-violation-rows');
+  const allCount = $('all-count');
+  const pageSummary = $('page-summary');
+  const pageNumbers = $('page-numbers');
+  const pagePrev = $('page-prev');
+  const pageNext = $('page-next');
+  const pageSize = 10;
+  const allRecords = records.slice().sort(function (a, b) {
+    return (b.date + b.time).localeCompare(a.date + a.time) || a.id - b.id;
+  });
+  let currentPage = 1;
   $('data-period').textContent = 'Từ ' + formatDate(meta.dateFrom) + ' đến ' + formatDate(meta.dateTo);
   $('data-total').textContent = records.length.toLocaleString('vi-VN') + ' bản ghi trong dữ liệu cung cấp';
+
+  function renderAllViolations() {
+    const pageCount = Math.max(1, Math.ceil(allRecords.length / pageSize));
+    currentPage = Math.min(Math.max(currentPage, 1), pageCount);
+    const start = (currentPage - 1) * pageSize;
+    const end = Math.min(start + pageSize, allRecords.length);
+    allRows.replaceChildren();
+    const fragment = document.createDocumentFragment();
+    allRecords.slice(start, end).forEach(function (record) {
+      const row = document.createElement('tr');
+      const plateCell = document.createElement('th');
+      const violationCell = document.createElement('td');
+      const plate = document.createElement('span');
+      const source = document.createElement('span');
+      const violation = document.createElement('span');
+      plate.className = 'table-plate';
+      plate.textContent = record.plate;
+      source.className = 'table-secondary';
+      source.textContent = formatDate(record.date) + ', ' + (record.time.endsWith(':00') ? record.time.slice(0, 5) : record.time);
+      violation.className = 'table-violation';
+      violation.textContent = record.violation;
+      plateCell.scope = 'row';
+      plateCell.append(plate, source);
+      violationCell.append(violation);
+      row.append(plateCell, violationCell);
+      fragment.appendChild(row);
+    });
+    allRows.appendChild(fragment);
+    allCount.textContent = allRecords.length.toLocaleString('vi-VN') + ' bản ghi';
+    pageSummary.textContent = 'Hiển thị ' + (start + 1).toLocaleString('vi-VN') + '–' + end.toLocaleString('vi-VN') + ' trong ' + allRecords.length.toLocaleString('vi-VN');
+    pagePrev.disabled = currentPage === 1;
+    pageNext.disabled = currentPage === pageCount;
+    pageNumbers.replaceChildren();
+    const pages = [];
+    if (pageCount <= 7) {
+      for (let page = 1; page <= pageCount; page += 1) pages.push(page);
+    } else {
+      pages.push(1);
+      if (currentPage > 4) pages.push('…');
+      const from = Math.max(2, currentPage - 1);
+      const to = Math.min(pageCount - 1, currentPage + 1);
+      for (let page = from; page <= to; page += 1) pages.push(page);
+      if (currentPage < pageCount - 3) pages.push('…');
+      pages.push(pageCount);
+    }
+    pages.forEach(function (page) {
+      if (page === '…') {
+        const ellipsis = document.createElement('span');
+        ellipsis.className = 'page-ellipsis';
+        ellipsis.textContent = '…';
+        pageNumbers.appendChild(ellipsis);
+        return;
+      }
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'page-button' + (page === currentPage ? ' is-active' : '');
+      button.textContent = page;
+      button.setAttribute('aria-label', 'Trang ' + page);
+      if (page === currentPage) button.setAttribute('aria-current', 'page');
+      button.addEventListener('click', function () {
+        currentPage = page;
+        renderAllViolations();
+        $('all-violations-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      pageNumbers.appendChild(button);
+    });
+  }
+  pagePrev.addEventListener('click', function () { if (currentPage > 1) { currentPage -= 1; renderAllViolations(); } });
+  pageNext.addEventListener('click', function () { if (currentPage < Math.ceil(allRecords.length / pageSize)) { currentPage += 1; renderAllViolations(); } });
+  renderAllViolations();
 
   const types = Array.from(new Set(records.map(function (record) { return record.vehicle; })));
   const groups = [
@@ -106,7 +188,7 @@
   }
 
   function showEmpty(title, description, showExample) {
-    list.replaceChildren();
+    resultRows.replaceChildren();
     list.hidden = true;
     empty.hidden = false;
     $('empty-title').textContent = title;
@@ -125,20 +207,35 @@
       return;
     }
     empty.hidden = true;
-    list.replaceChildren();
+    resultRows.replaceChildren();
     const fragment = document.createDocumentFragment();
-    result.forEach(function (record, index) {
-      const card = $('violation-template').content.cloneNode(true);
-      card.querySelector('.plate-value').textContent = record.plate;
-      card.querySelector('.record-number').textContent = 'Bản ghi ' + (index + 1) + '/' + result.length;
-      card.querySelector('.date-value').textContent = formatDate(record.date);
-      card.querySelector('.time-value').textContent = record.time.endsWith(':00') ? record.time.slice(0, 5) : record.time;
-      card.querySelector('.vehicle-value').textContent = record.vehicle;
-      card.querySelector('.violation-value').textContent = record.violation;
-      card.querySelector('.record-source').textContent = 'STT trong dữ liệu gốc: ' + record.id;
-      fragment.appendChild(card);
+    result.forEach(function (record) {
+      const row = document.createElement('tr');
+      const plateCell = document.createElement('th');
+      const violationCell = document.createElement('td');
+      const timeCell = document.createElement('td');
+      const plate = document.createElement('span');
+      const source = document.createElement('span');
+      const violation = document.createElement('span');
+      const vehicle = document.createElement('span');
+
+      plate.className = 'table-plate';
+      plate.textContent = record.plate;
+      source.className = 'table-secondary';
+      source.textContent = 'STT: ' + record.id;
+      violation.className = 'table-violation';
+      violation.textContent = record.violation;
+      vehicle.className = 'table-secondary table-vehicle';
+      vehicle.textContent = record.vehicle;
+
+      plateCell.scope = 'row';
+      plateCell.append(plate, source);
+      violationCell.append(violation, vehicle);
+      timeCell.textContent = formatDate(record.date) + ', ' + (record.time.endsWith(':00') ? record.time.slice(0, 5) : record.time);
+      row.append(plateCell, violationCell, timeCell);
+      fragment.appendChild(row);
     });
-    list.appendChild(fragment);
+    resultRows.appendChild(fragment);
     list.hidden = false;
     count.textContent = result.length + ' bản ghi';
     count.hidden = false;

@@ -68,19 +68,46 @@
         <p id="empty-description">Thông tin vi phạm sẽ hiển thị tại đây sau khi bạn nhập biển số.</p>
         <button id="example-button" class="example-button" type="button">Thử với biển số 68C-162.58 <span aria-hidden="true">→</span></button>
       </div>
-      <div id="result-list" class="result-list" hidden></div>
+      <div id="result-list" class="result-table-wrap" tabindex="0" aria-label="Danh sách vi phạm, cuộn ngang để xem đầy đủ" hidden>
+        <table class="violation-table">
+          <caption class="sr-only">Các vi phạm khớp với thông tin tra cứu</caption>
+          <thead>
+            <tr><th scope="col">Biển số xe</th><th scope="col">Hành vi vi phạm / loại xe</th><th scope="col">Thời gian vi phạm</th></tr>
+          </thead>
+          <tbody id="result-rows"></tbody>
+        </table>
+      </div>
     </section>
     </div>
+
+    <section class="all-violations" aria-labelledby="all-violations-title">
+      <div class="all-violations-heading">
+        <div class="panel-heading">
+          <span class="result-heading-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16M4 10h16M4 15h16M4 20h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="7" cy="5" r="1" fill="currentColor"/><circle cx="7" cy="10" r="1" fill="currentColor"/><circle cx="7" cy="15" r="1" fill="currentColor"/></svg></span>
+          <div><h2 id="all-violations-title">Danh sách vi phạm</h2><p class="panel-subtitle">Tổng hợp các phương tiện trong dữ liệu cung cấp</p></div>
+        </div>
+        <span id="all-count" class="count"></span>
+      </div>
+      <div id="all-violations-list" class="result-table-wrap all-violations-table-wrap" tabindex="0" aria-label="Danh sách tất cả vi phạm, cuộn ngang để xem đầy đủ">
+        <table class="violation-table all-violations-table">
+          <caption class="sr-only">Danh sách tất cả vi phạm của các phương tiện</caption>
+          <thead>
+            <tr><th scope="col">Biển số xe</th><th scope="col">Hành vi vi phạm</th></tr>
+          </thead>
+          <tbody id="all-violation-rows"></tbody>
+        </table>
+      </div>
+      <div class="pagination" aria-label="Phân trang danh sách vi phạm">
+        <span id="page-summary" class="page-summary"></span>
+        <div class="page-controls">
+          <button type="button" class="page-button" id="page-prev" aria-label="Trang trước">‹</button>
+          <div id="page-numbers" class="page-numbers" role="group" aria-label="Chọn trang"></div>
+          <button type="button" class="page-button" id="page-next" aria-label="Trang sau">›</button>
+        </div>
+      </div>
+    </section>
   </main>
   <footer class="container footer"><span>Tra cứu phương tiện</span><span id="data-total"></span></footer>
 
-  <template id="violation-template">
-    <article class="violation-card">
-      <div class="card-header"><div><p class="card-kicker">Biển số phương tiện</p><h3 class="plate-value"></h3></div><span class="record-number"></span></div>
-      <dl class="details-grid"><div><dt><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M8 3v4m8-4v4M4 11h16m-12 4h2m4 0h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Ngày vi phạm</dt><dd class="date-value"></dd></div><div><dt><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Giờ vi phạm</dt><dd class="time-value"></dd></div><div class="vehicle-detail"><dt><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 16V9l2-5h10l2 5v7M5 10h14M8 14h1m6 0h1M6 16v3m12-3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Loại phương tiện</dt><dd class="vehicle-value"></dd></div></dl>
-      <div class="violation-detail"><h4><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10.3 4.8 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.8a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.6"/><path d="M12 9v5m0 3h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Hành vi vi phạm</h4><p class="violation-value"></p></div>
-      <div class="record-source"></div>
-    </article>
-  </template>
 </body>
 </html>
